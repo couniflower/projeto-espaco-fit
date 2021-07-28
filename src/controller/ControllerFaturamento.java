@@ -218,26 +218,45 @@ public class ControllerFaturamento {
         }
     }
 
+    private void atualizaEstoque(Produto produto, int quantidade) {
+        if(quantidade < produto.getQtdEstoque()){
+            ItemVenda item = new ItemVenda(produto, quantidade);
+            listaItens.add(item);
+            valor += item.getSubtotal();
+
+            Produto p = ProdutoService.Listar(produto.getId());
+            p.setQtdEstoque(produto.getQtdEstoque() - quantidade);
+            ProdutoService.Atualizar(p);
+
+            tabela.addRow(new Object[]{listaItens.indexOf(item) + 1, produto.getDescricao(), item.getQuantidade(), produto.getValor(), item.getSubtotal()});
+
+            tela.getCodigoBarras().setText(null);
+        }else{
+            JOptionPane.showMessageDialog(null, "Quantidade indisponível!");
+        }
+    }
+
     private void inserirItem() {
         if(tela.getTextoStatus().getText().equalsIgnoreCase("off")){
             JOptionPane.showMessageDialog(null, "Não existe um faturamento em andamento!\nAperte F2 para criar um novo faturamento.");
         }else{
-            Produto produto = ProdutoService.Listar(tela.getCodigoBarras().getText());
-            if(produto == null){
-                JOptionPane.showMessageDialog(null, "Esse código de barras não existe!");
+            String codigo = tela.getCodigoBarras().getText();
+            Produto produto;
+            if(codigo.contains("x")){
+                produto = ProdutoService.Listar(codigo.substring(codigo.indexOf('x') + 1));
+                if(produto == null){
+                    JOptionPane.showMessageDialog(null, "Esse código de barras não existe!");
+                }else{
+                    int qtd = Integer.parseInt(codigo.substring(0, codigo.indexOf('x')));
+                    atualizaEstoque(produto, qtd);
+                }
             }else{
-                tela.getCodigoBarras().setText(produto.getCodigoBarra());
-                ItemVenda item = new ItemVenda(produto, 1);
-                listaItens.add(item);
-                valor += item.getSubtotal();
-
-                tabela.addRow(new Object[]{listaItens.indexOf(item) + 1, produto.getDescricao(), item.getQuantidade(), produto.getValor(), item.getSubtotal()});
-
-                tela.getCodigoBarras().setText(null);
-
-                DecimalFormat df = new DecimalFormat("0.00");
-                String valor = String.valueOf(df.format(ControllerFaturamento.valor));
-                tela.getValorTotal().setText("R$ " + valor);
+                produto = ProdutoService.Listar(codigo);
+                if (produto == null) {
+                    JOptionPane.showMessageDialog(null, "Esse código de barras não existe!");
+                } else {
+                    atualizaEstoque(produto, 1);
+                }
             }
         }
     }

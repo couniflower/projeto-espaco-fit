@@ -5,7 +5,7 @@
  */
 package view.telasCadastro;
 
-import jtextfields.Limitador;
+import jtextfields.LimitadorX;
 
 import javax.swing.*;
 
@@ -32,7 +32,7 @@ public class TelaVendas extends javax.swing.JFrame {
       textoEnderecoP.setWrapStyleWord(true);
       textoEnderecoP.setRows(2);
 
-      codigoBarras.setDocument(new Limitador(15));
+      codigoBarras.setDocument(new LimitadorX(18));
    }
 
    /**
