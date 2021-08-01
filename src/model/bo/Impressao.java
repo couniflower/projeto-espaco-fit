@@ -8,12 +8,12 @@ public class Impressao {
    private float valorDesconto;
    private float valorAcrescimo;
    private float valorPago;
-   private int status;
+   private String status;
 
    public Impressao() {
    }
 
-   public Impressao(String dtEmissao, String dtVencimento, String dtPagamento, float valorEmitido, float valorDesconto, float valorAcrescimo, float valorPago, int status) {
+   public Impressao(String dtEmissao, String dtVencimento, String dtPagamento, float valorEmitido, float valorDesconto, float valorAcrescimo, float valorPago, String status) {
       this.dtEmissao = dtEmissao;
       this.dtVencimento = dtVencimento;
       this.dtPagamento = dtPagamento;
@@ -80,11 +80,11 @@ public class Impressao {
       this.valorPago = valorPago;
    }
 
-   public int getStatus() {
+   public String getStatus() {
       return status;
    }
 
-   public void setStatus(int status) {
+   public void setStatus(String status) {
       this.status = status;
    }
 }

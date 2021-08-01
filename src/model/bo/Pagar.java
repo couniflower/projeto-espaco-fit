@@ -7,7 +7,7 @@ public class Pagar extends Impressao {
    public Pagar() {
    }
 
-   public Pagar(int id, Compra compra, String dtEmissao, String dtVencimento, String dtPagamento, float valorEmitido, float valorDesconto, float valorAcrescimo, float valorPago, int status) {
+   public Pagar(int id, Compra compra, String dtEmissao, String dtVencimento, String dtPagamento, float valorEmitido, float valorDesconto, float valorAcrescimo, float valorPago, String status) {
       super(dtEmissao, dtVencimento, dtPagamento, valorEmitido, valorDesconto, valorAcrescimo, valorPago, status);
       this.id = id;
       this.compra = compra;

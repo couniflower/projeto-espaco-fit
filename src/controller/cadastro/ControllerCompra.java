@@ -206,7 +206,7 @@ public class ControllerCompra implements ActionListener {
 
          pagar.setValorDesconto(Float.parseFloat(desconto));
 
-         pagar.setStatus(0); // 0 - não pago e 1 - pago
+         //pagar.setStatus(0); // 0 - não pago e 1 - pago
          
          pagar.setValorEmitido(compra.getValorTotal() + pagar.getValorAcrescimo() - pagar.getValorDesconto());
 

@@ -225,7 +225,7 @@ public class ControllerVenda implements ActionListener {
          
          receber.setValorDesconto(Float.parseFloat(desconto));
          
-         receber.setStatus(0); // 0 - não pago e 1 - pago
+         //receber.setStatus(0); // 0 - não pago e 1 - pago
 
          receber.setValorEmitido(venda.getValorTotal() - receber.getValorDesconto() + receber.getValorAcrescimo());
 

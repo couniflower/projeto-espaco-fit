@@ -37,7 +37,7 @@ public class PagarDAO implements InterfaceDAO<Pagar> {
          pstm.setFloat(6, objeto.getValorDesconto());
          pstm.setFloat(7, objeto.getValorAcrescimo());
          pstm.setFloat(8, objeto.getValorPago());
-         pstm.setInt(9, objeto.getStatus());
+         pstm.setString(9, objeto.getStatus());
          pstm.executeUpdate();
       }catch(Exception ex){
          ex.printStackTrace();
@@ -68,7 +68,7 @@ public class PagarDAO implements InterfaceDAO<Pagar> {
             pagar.setValorDesconto(rs.getFloat("valorDesconto"));
             pagar.setValorAcrescimo(rs.getFloat("valorAcrescimo"));
             pagar.setValorPago(rs.getFloat("valorPago"));
-            pagar.setStatus(rs.getInt("statusPagar"));
+            pagar.setStatus(rs.getString("statusPagar"));
             
             pagar.setCompra(service.CompraService.Listar(rs.getInt("idCompras")));
             
@@ -105,7 +105,7 @@ public class PagarDAO implements InterfaceDAO<Pagar> {
             pagar.setValorDesconto(rs.getFloat("valorDesconto"));
             pagar.setValorAcrescimo(rs.getFloat("valorAcrescimo"));
             pagar.setValorPago(rs.getFloat("valorPago"));
-            pagar.setStatus(rs.getInt("statusPagar"));
+            pagar.setStatus(rs.getString("statusPagar"));
             
             pagar.setCompra(service.CompraService.Listar(rs.getInt("idCompras")));
          }
@@ -146,7 +146,7 @@ public class PagarDAO implements InterfaceDAO<Pagar> {
          pstm.setFloat(6, objeto.getValorDesconto());
          pstm.setFloat(7, objeto.getValorAcrescimo());
          pstm.setFloat(8, objeto.getValorPago());
-         pstm.setInt(9, objeto.getStatus());
+         pstm.setString(9, objeto.getStatus());
          pstm.setInt(10, objeto.getId());
          pstm.executeUpdate();
       }catch(Exception ex){

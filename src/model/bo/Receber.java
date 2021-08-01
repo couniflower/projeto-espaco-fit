@@ -7,7 +7,7 @@ public class Receber extends Impressao {
    public Receber() {
    }
 
-   public Receber(int id, Venda venda, String dtEmissao, String dtVencimento, String dtPagamento, float valorEmitido, float valorDesconto, float valorAcrescimo, float valorPago, int status) {
+   public Receber(int id, Venda venda, String dtEmissao, String dtVencimento, String dtPagamento, float valorEmitido, float valorDesconto, float valorAcrescimo, float valorPago, String status) {
       super(dtEmissao, dtVencimento, dtPagamento, valorEmitido, valorDesconto, valorAcrescimo, valorPago, status);
       this.id = id;
       this.venda = venda;

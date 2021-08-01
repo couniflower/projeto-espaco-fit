@@ -10,13 +10,11 @@ import view.telasCadastro.TelaVendas;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.KeyEvent;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class ControllerFaturamento {
 
@@ -24,9 +22,10 @@ public class ControllerFaturamento {
     public static List<ItemVenda> listaItens = new ArrayList<>();
     public static DefaultTableModel tabela;
     public static float valor;
-    public DateFormat data;
-    public DateFormat hora;
-    public Date dataHora;
+    public final DateTimeFormatter data = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public final DateTimeFormatter dataSQL = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public final DateTimeFormatter hora = DateTimeFormatter.ofPattern("HH:mm");
+    public LocalDateTime dataHora;
     public Venda venda = new Venda();
     public static int codigoAluno;
     public static int codigoPersonal;
@@ -105,11 +104,9 @@ public class ControllerFaturamento {
         //cria uma thread
         Thread th = new Thread(() -> {
             while(true) { //roda indefinidamente
-                dataHora = Calendar.getInstance().getTime(); //pega a hora do sistema
-                data = new SimpleDateFormat("dd/MM/yyyy");
-                hora = new SimpleDateFormat("HH:mm");
-                tela.getTextoData().setText(data.format(dataHora));
-                tela.getTextoHora().setText(hora.format(dataHora));
+                dataHora = LocalDateTime.now(); //pega a hora do sistema
+                tela.getTextoData().setText(dataHora.format(data));
+                tela.getTextoHora().setText(dataHora.format(hora));
                 try {
                     Thread.sleep(1000); //espera 1 segundo para fazer a nova evolução
                 } catch(InterruptedException ex){
@@ -230,6 +227,10 @@ public class ControllerFaturamento {
 
             tabela.addRow(new Object[]{listaItens.indexOf(item) + 1, produto.getDescricao(), item.getQuantidade(), produto.getValor(), item.getSubtotal()});
 
+            DecimalFormat df = new DecimalFormat("0.00");
+            String valor = String.valueOf(df.format(ControllerFaturamento.valor));
+            tela.getValorTotal().setText("R$ " + valor);
+
             tela.getCodigoBarras().setText(null);
         }else{
             JOptionPane.showMessageDialog(null, "Quantidade indisponível!");
@@ -265,9 +266,8 @@ public class ControllerFaturamento {
         if(tela.getTextoStatus().getText().equalsIgnoreCase("off")){
             ativacao(true);
             tela.getTextoStatus().setText("EM ANDAMENTO");
-            String dataFormat = data.format(dataHora).substring(6, 10) + "-" + data.format(dataHora).substring(3, 5) + "-" + data.format(dataHora).substring(0, 2);
-            venda.setData(dataFormat);
-            venda.setIdentificacao("Venda " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(dataHora));
+            venda.setData(dataHora.format(dataSQL));
+            venda.setIdentificacao("Venda " + dataHora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
             horario(true);
         }else{
             JOptionPane.showMessageDialog(null, "Um novo faturamento não pode ser feito");
@@ -332,8 +332,25 @@ public class ControllerFaturamento {
                 limpar();
                 tela.getValorTotal().setText("R$ 0,00");
                 valor = 0;
+                adicionarRecebimento(venda);
                 ativacao(false);
             }
         }
+    }
+
+    private void adicionarRecebimento(Venda venda) {
+        Receber receber = new Receber();
+
+        receber.setVenda(venda);
+        receber.setDtEmissao(venda.getData());
+        receber.setValorEmitido(venda.getValorTotal());
+
+        LocalDate dataVenda = LocalDate.parse(venda.getData(), dataSQL);
+        LocalDate vencimento = dataVenda.plusMonths(2);
+        receber.setDtVencimento(vencimento.format(dataSQL));
+
+        receber.setStatus("ABERTO");
+
+        ReceberService.Incluir(receber);
     }
 }
